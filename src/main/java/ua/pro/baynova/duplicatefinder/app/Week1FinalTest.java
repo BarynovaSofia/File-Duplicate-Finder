@@ -28,10 +28,10 @@ public class Week1FinalTest {
     }
 
     private static void createTestFiles(){
-        System.out.println("");
+        System.out.println("--- Подготовка тестовых данных ---");
 
         try {
-            File testDir = new File("");
+            File testDir = new File("test_duplicates");
             if (!testDir.exists()) {
                 testDir.mkdir();
             }
@@ -151,8 +151,8 @@ public class Week1FinalTest {
         double duration = (endTime - startTime) / 1000.0;
 
         System.out.println();
-        System.out.printf("", duration);
-        System.out.printf("", processed / Math.max(duration, 0.01));
+        System.out.printf("Общее время выполнения: %.2f секунд%n", duration);
+        System.out.printf("Производительность: %.0f файлов/секунду%n", processed / Math.max(duration, 0.01));
 
         if (stats.getPotentialSavings() > 0) {
             System.out.println();
