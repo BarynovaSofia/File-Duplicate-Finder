@@ -15,15 +15,11 @@ public class FileScanner {
     private final boolean followSymlinks;
     private final int maxDepth;
 
-    /**
-     * Создает сканер с настройками по умолчанию
-     */
     public FileScanner() {
         this(path -> true, false, Integer.MAX_VALUE);
     }
 
     /**
-     * Создает сканер с настройками
      * @param fileFilter фильтр файлов (какие файлы включать)
      * @param followSymlinks следовать ли символьным ссылкам
      * @param maxDepth максимальная глубина обхода
@@ -35,13 +31,12 @@ public class FileScanner {
     }
 
     /**
-     * Сканирует директорию и возвращает список найденных файлов
      * @param directoryPath путь к директории
      * @return список файлов для обработки
      */
     public List<FileTask> scanDirectory(String directoryPath) throws IOException {
         if (directoryPath == null || directoryPath.trim().isEmpty()) {
-            throw new IllegalArgumentException("Путь к директории не может быть пустым");
+            throw new IllegalArgumentException("Путь к директории не может быть пустым!!");
         }
 
         Path startPath = Paths.get(directoryPath);
@@ -68,9 +63,6 @@ public class FileScanner {
         return fileTasks;
     }
 
-    /**
-     * Возвращает опции обхода файлового дерева
-     */
     private java.util.Set<FileVisitOption> getVisitOptions() {
         if (followSymlinks) {
             return java.util.Set.of(FileVisitOption.FOLLOW_LINKS);
@@ -78,9 +70,6 @@ public class FileScanner {
         return java.util.Set.of();
     }
 
-    /**
-     * Visitor для обхода файлового дерева
-     */
     private class FileVisitor extends SimpleFileVisitor<Path> {
         private final List<FileTask> fileTasks;
         private int visitedFiles = 0;
@@ -148,10 +137,6 @@ public class FileScanner {
         }
     }
 
-    /**
-     * Информация о файле для обработки
-     * Простая структура данных без логики
-     */
     public static class FileTask {
         private final String path;
         private final long size;
@@ -189,9 +174,6 @@ public class FileScanner {
 
     public static class Filters {
 
-        /**
-         * Фильтр по расширениям файлов
-         */
         public static Predicate<Path> byExtensions(String... extensions) {
             java.util.Set<String> extSet = java.util.Set.of(extensions);
             return path -> {
@@ -200,9 +182,6 @@ public class FileScanner {
             };
         }
 
-        /**
-         * Фильтр по минимальному размеру файла
-         */
         public static Predicate<Path> minSize(long minBytes) {
             return path -> {
                 try {
@@ -213,16 +192,10 @@ public class FileScanner {
             };
         }
 
-        /**
-         * Исключить скрытые файлы
-         */
         public static Predicate<Path> excludeHidden() {
             return path -> !path.getFileName().toString().startsWith(".");
         }
 
-        /**
-         * Комбинирование фильтров через AND
-         */
         public static Predicate<Path> and(Predicate<Path> first, Predicate<Path> second) {
             return first.and(second);
         }

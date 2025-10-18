@@ -2,15 +2,15 @@ package ua.pro.baynova.duplicatefinder.index;
 
 import ua.pro.baynova.duplicatefinder.model.FileInfo;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class SimpleFileIndex {
 
-    private final Map<String, FileInfo> pathIndex = new HashMap<>();
-    private final Map<String, Set<String>> hashIndex = new HashMap<>();
+    private final ConcurrentHashMap<String, FileInfo> pathIndex = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Set<String>> hashIndex = new ConcurrentHashMap<>();
 
     /**
-     * Добавляет или обновляет информацию о файле
      * @param fileInfo информация о файле
      */
     public void addOrUpdate(FileInfo fileInfo) {
@@ -34,7 +34,6 @@ public class SimpleFileIndex {
     }
 
     /**
-     * Получает информацию о файле по пути
      * @param path путь к файлу
      * @return информация о файле или null если не найден
      */
@@ -43,7 +42,6 @@ public class SimpleFileIndex {
     }
 
     /**
-     * Проверяет содержится ли файл в индексе
      * @param path путь к файлу
      * @return true если файл есть в индексе
      */
@@ -52,7 +50,6 @@ public class SimpleFileIndex {
     }
 
     /**
-     * Удаляет файл из индекса
      * @param path путь к файлу
      * @return true если файл был удален, false если его не было
      */
@@ -66,18 +63,10 @@ public class SimpleFileIndex {
         return false;
     }
 
-    /**
-     * Возвращает все файлы в индексе
-     * @return список всех файлов
-     */
     public List<FileInfo> getAllFiles() {
         return new ArrayList<>(pathIndex.values());
     }
 
-    /**
-     * Находит все группы дубликатов
-     * @return список групп дубликатов (каждая группа содержит файлы с одинаковым содержимым)
-     */
     public List<List<FileInfo>> findDuplicates() {
         List<List<FileInfo>> duplicateGroups = new ArrayList<>();
 
@@ -106,7 +95,6 @@ public class SimpleFileIndex {
     }
 
     /**
-     * Находит дубликаты конкретного файла
      * @param filePath путь к файлу
      * @return список дубликатов (без самого файла)
      */
@@ -130,10 +118,6 @@ public class SimpleFileIndex {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Получить статистику индекса
-     * @return информация о содержимом индекса
-     */
     public IndexStatistics getStatistics() {
         int totalFiles = pathIndex.size();
 
@@ -174,13 +158,14 @@ public class SimpleFileIndex {
     }
 
     private void addToHashIndex(String hash, String path) {
-        hashIndex.computeIfAbsent(hash, k -> new HashSet<>()).add(path);
+        hashIndex.computeIfAbsent(hash, k -> ConcurrentHashMap.newKeySet()).add(path);
     }
 
     private void removeFromHashIndex(String hash, String path) {
         Set<String> paths = hashIndex.get(hash);
         if (paths != null) {
             paths.remove(path);
+            // Удаляем пустые множества
             if (paths.isEmpty()) {
                 hashIndex.remove(hash);
             }

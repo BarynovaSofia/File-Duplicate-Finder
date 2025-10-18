@@ -1,0 +1,10 @@
+
+2025-10-06 17:18:04.989 [main] WARN  u.p.b.d.concurrent.LoggingTest - WARN: Предупреждение о потенциальной проблеме
+2025-10-06 17:18:04.989 [main] ERROR u.p.b.d.concurrent.LoggingTest - ERROR: Ошибка в работе приложения
+2025-10-06 17:18:04.995 [main] ERROR u.p.b.d.concurrent.LoggingTest - Поимка исключения
+java.lang.RuntimeException: Тестовая ошибка
+	at ua.pro.baynova.duplicatefinder.concurrent.LoggingTest.testErrorLogging(LoggingTest.java:64)
+	at ua.pro.baynova.duplicatefinder.concurrent.LoggingTest.main(LoggingTest.java:17)
+2025-10-06 17:18:04.997 [main] ERROR u.p.b.d.concurrent.LoggingTest - Ошибка: Тестовая ошибка
+2025-10-06 17:18:04.999 [main] WARN  u.p.b.d.concurrent.LoggingTest - Файл не найден: /path/to/missing/file.txt
+2025-10-06 17:18:04.999 [main] WARN  u.p.b.d.concurrent.LoggingTest - Очередь заполнена на 95%

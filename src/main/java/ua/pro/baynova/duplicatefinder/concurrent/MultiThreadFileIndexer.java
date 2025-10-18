@@ -36,7 +36,6 @@ public class MultiThreadFileIndexer {
     }
 
     /**
-     * Главный метод - полный цикл индексации директории
      * @param directoryPath путь к директории
      * @return результат индексации с подробной статистикой
      */
@@ -155,14 +154,14 @@ public class MultiThreadFileIndexer {
         double theoreticalSpeedup = (double) estimatedSingleThreadTime / result.hashingDuration;
         double efficiency = theoreticalSpeedup / numberOfThreads * 100;
 
-        System.out.printf("Оценка эффективности многопоточности:%n");
-        System.out.printf("  Теоретическое ускорение: %.1fx%n", theoreticalSpeedup);
-        System.out.printf("  Эффективность: %.1f%%%n", efficiency);
+        System.out.printf("Оценка эффективности многопоточности: %n");
+        System.out.printf(" Теоретическое ускорение: %.1fx%n", theoreticalSpeedup);
+        System.out.printf(" Эффективность: %.1f%%%n", efficiency);
 
         if (efficiency < 50) {
-            System.out.println("  ⚠️ Низкая эффективность - возможно файлы слишком маленькие для многопоточности");
+            System.out.println("⚠️ Низкая эффективность, возможно файлы слишком маленькие для многопоточности");
         } else if (efficiency > 80) {
-            System.out.println("  ✅ Отличная эффективность многопоточной обработки");
+            System.out.println("Отличная эффективность многопоточной обработки!!");
         }
     }
 
@@ -182,13 +181,13 @@ public class MultiThreadFileIndexer {
                     i + 1, group.size(), formatBytes(group.get(0).getSize()));
 
             for (FileInfo file : group) {
-                System.out.printf("  📄 %s%n", file.getFileName());
-                System.out.printf("      %s%n", file.getPath());
+                System.out.printf(" %s%n", file.getFileName());
+                System.out.printf(" %s%n", file.getPath());
             }
         }
 
         if (duplicateGroups.size() > groupsToShow) {
-            System.out.printf("\n... и еще %d групп дубликатов%n",
+            System.out.printf("\n... и еще %d групп дубликатов %n",
                     duplicateGroups.size() - groupsToShow);
         }
     }
@@ -199,13 +198,13 @@ public class MultiThreadFileIndexer {
         System.out.println("=".repeat(60));
 
         System.out.printf("Общее время: %.2f сек%n", result.totalDuration / 1000.0);
-        System.out.printf("  └─ Сканирование: %.2f сек (%.1f%%)%n",
+        System.out.printf(" Сканирование: %.2f сек (%.1f%%)%n",
                 result.scanningDuration / 1000.0,
                 100.0 * result.scanningDuration / result.totalDuration);
-        System.out.printf("  └─ Хеширование: %.2f сек (%.1f%%)%n",
+        System.out.printf(" Хеширование: %.2f сек (%.1f%%)%n",
                 result.hashingDuration / 1000.0,
                 100.0 * result.hashingDuration / result.totalDuration);
-        System.out.printf("  └─ Индексация: %.2f сек (%.1f%%)%n",
+        System.out.printf(" Индексация: %.2f сек (%.1f%%)%n",
                 result.indexingDuration / 1000.0,
                 100.0 * result.indexingDuration / result.totalDuration);
 
@@ -222,18 +221,18 @@ public class MultiThreadFileIndexer {
         double hashingPercentage = 100.0 * result.hashingDuration / result.totalDuration;
 
         if (hashingPercentage > 70) {
-            System.out.println("• Хеширование занимает большую часть времени - рассмотрите увеличение количества потоков");
+            System.out.println(" Хеширование занимает большую часть времени - рассмотрите увеличение количества потоков");
         }
 
         if (result.processedFiles.size() < numberOfThreads * 10) {
-            System.out.println("• Слишком мало файлов для эффективной многопоточности - для маленьких задач используйте 1-2 потока");
+            System.out.println(" Слишком мало файлов для эффективной многопоточности - для маленьких задач используйте 1-2 потока");
         }
 
         if (result.duplicateGroups.size() > result.processedFiles.size() * 0.1) {
-            System.out.println("• Найдено много дубликатов - рассмотрите очистку или реорганизацию файлов");
+            System.out.println(" Найдено много дубликатов - лучше рассмотреть очистку или реорганизацию файлов");
         }
 
-        System.out.printf("• Производительность: %.1f файлов/сек%n",
+        System.out.printf(" Производительность: %.1f файлов/сек%n",
                 result.processedFiles.size() * 1000.0 / result.totalDuration);
     }
 

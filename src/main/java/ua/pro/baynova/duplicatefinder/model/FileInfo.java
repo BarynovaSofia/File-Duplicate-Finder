@@ -49,7 +49,6 @@ public class FileInfo {
     }
 
     /**
-     * Проверяет нужно ли переиндексировать файл
      * @param currentLastModified текущее время изменения файла
      * @return true если файл был изменен и нужно пересчитать хеш
      */
@@ -57,9 +56,6 @@ public class FileInfo {
         return currentLastModified.isAfter(this.lastModified);
     }
 
-    /**
-     * Получить имя файла без пути
-     */
     public String getFileName(){
         int lastSeparator = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
         return lastSeparator > 0 ? path.substring(lastSeparator + 1) : path;

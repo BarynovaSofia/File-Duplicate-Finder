@@ -1,0 +1,30 @@
+2025-10-06 17:18:04.985 [main] INFO  u.p.b.d.concurrent.LoggingTest - --- Тест 1: Базовые уровни логов ---
+2025-10-06 17:18:04.988 [main] INFO  u.p.b.d.concurrent.LoggingTest - INFO: Обычная информация о работе приложения
+2025-10-06 17:18:04.989 [main] WARN  u.p.b.d.concurrent.LoggingTest - WARN: Предупреждение о потенциальной проблеме
+2025-10-06 17:18:04.989 [main] ERROR u.p.b.d.concurrent.LoggingTest - ERROR: Ошибка в работе приложения
+2025-10-06 17:18:04.990 [main] INFO  u.p.b.d.concurrent.LoggingTest - Обработан файл: test.txt, размер: 1024 байт
+2025-10-06 17:18:04.993 [main] INFO  u.p.b.d.concurrent.LoggingTest - Статистика: файлов=100, ошибок=2, время=5000 мс
+2025-10-06 17:18:04.993 [main] INFO  u.p.b.d.concurrent.LoggingTest - 
+--- Тест 2: MDC контекст ---
+2025-10-06 17:18:04.994 [main] INFO  u.p.b.d.concurrent.LoggingTest - Лог с MDC контекстом 
+2025-10-06 17:18:04.994 [main] INFO  u.p.b.d.concurrent.LoggingTest - Обработка файла в контексте worker-1
+2025-10-06 17:18:04.994 [main] INFO  u.p.b.d.concurrent.LoggingTest - Переключение на другой worker - теперь должен быть [worker-2]
+2025-10-06 17:18:04.994 [main] INFO  u.p.b.d.concurrent.LoggingTest - MDC очищен - контекста больше нет
+2025-10-06 17:18:04.995 [main] INFO  u.p.b.d.concurrent.LoggingTest - 
+--- Тест 3: Логирование ошибок ---
+2025-10-06 17:18:04.995 [main] ERROR u.p.b.d.concurrent.LoggingTest - Поимка исключения
+java.lang.RuntimeException: Тестовая ошибка
+	at ua.pro.baynova.duplicatefinder.concurrent.LoggingTest.testErrorLogging(LoggingTest.java:64)
+	at ua.pro.baynova.duplicatefinder.concurrent.LoggingTest.main(LoggingTest.java:17)
+2025-10-06 17:18:04.997 [main] ERROR u.p.b.d.concurrent.LoggingTest - Ошибка: Тестовая ошибка
+2025-10-06 17:18:04.999 [main] WARN  u.p.b.d.concurrent.LoggingTest - Файл не найден: /path/to/missing/file.txt
+2025-10-06 17:18:04.999 [main] WARN  u.p.b.d.concurrent.LoggingTest - Очередь заполнена на 95%
+2025-10-06 17:18:04.999 [main] INFO  u.p.b.d.concurrent.LoggingTest - 
+--- Тест 4: Многопоточное логирование ---
+2025-10-06 17:18:05.001 [TestThread-2] INFO  u.p.b.d.concurrent.LoggingTest - Поток 2 начал работу
+2025-10-06 17:18:05.001 [TestThread-1] INFO  u.p.b.d.concurrent.LoggingTest - Поток 1 начал работу
+2025-10-06 17:18:05.001 [TestThread-3] INFO  u.p.b.d.concurrent.LoggingTest - Поток 3 начал работу
+2025-10-06 17:18:05.103 [TestThread-3] INFO  u.p.b.d.concurrent.LoggingTest - Поток 3 завершил работу
+2025-10-06 17:18:05.103 [TestThread-2] INFO  u.p.b.d.concurrent.LoggingTest - Поток 2 завершил работу
+2025-10-06 17:18:05.103 [TestThread-1] INFO  u.p.b.d.concurrent.LoggingTest - Поток 1 завершил работу
+2025-10-06 17:18:05.509 [main] INFO  u.p.b.d.concurrent.LoggingTest - Все тестовые потоки завершены

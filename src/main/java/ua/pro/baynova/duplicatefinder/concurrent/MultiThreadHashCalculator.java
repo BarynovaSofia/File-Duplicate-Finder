@@ -35,7 +35,6 @@ public class MultiThreadHashCalculator {
     }
 
     /**
-     * Обрабатывает список файлов параллельно
      * @param fileTasks список файлов для обработки
      * @return список FileInfo с вычисленными хешами
      */
@@ -46,7 +45,7 @@ public class MultiThreadHashCalculator {
             return new ArrayList<>();
         }
 
-        System.out.println("\nНачинаем параллельную обработку " + fileTasks.size() + " файлов...");
+        System.out.println("\nНачинается параллельная обработка " + fileTasks.size() + " файлов...");
         long startTime = System.currentTimeMillis();
 
         processedFiles.set(0);
@@ -96,7 +95,7 @@ public class MultiThreadHashCalculator {
                 System.err.println("Ошибка обработки файла: " + e.getCause().getMessage());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.err.println("Обработка прервана");
+                System.err.println("Обработка прервана!!");
                 break;
             }
         }
@@ -111,7 +110,7 @@ public class MultiThreadHashCalculator {
         executor.shutdown();
 
         if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
-            System.out.println("Принудительно останавливаем потоки...");
+            System.out.println("Принудительно останавливает потоки...");
             executor.shutdownNow();
 
             if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
@@ -208,7 +207,6 @@ public class MultiThreadHashCalculator {
                 calculator.calculateHash(task.getPath());
                 processed++;
             } catch (Exception e) {
-                // Игнорируем ошибки для чистоты эксперимента
             }
         }
 
@@ -237,38 +235,21 @@ public class MultiThreadHashCalculator {
         return String.format("%.1f GB", bytes / (1024.0 * 1024 * 1024));
     }
 
-    public static class ComparisonResult {
-        private final long singleThreadTimeMs;
-        private final long multiThreadTimeMs;
-        private final double speedup;
-        private final double efficiency;
-
-        public ComparisonResult(long singleThreadTimeMs, long multiThreadTimeMs,
-                                double speedup, double efficiency) {
-            this.singleThreadTimeMs = singleThreadTimeMs;
-            this.multiThreadTimeMs = multiThreadTimeMs;
-            this.speedup = speedup;
-            this.efficiency = efficiency;
-        }
-
-        public long getSingleThreadTimeMs() { return singleThreadTimeMs; }
-        public long getMultiThreadTimeMs() { return multiThreadTimeMs; }
-        public double getSpeedup() { return speedup; }
-        public double getEfficiency() { return efficiency; }
-
+    public record ComparisonResult(long singleThreadTimeMs, long multiThreadTimeMs,
+                                   double speedup, double efficiency) {
         @Override
-        public String toString() {
-            return String.format(
-                    "Результаты сравнения:\n" +
-                            "  Однопоточно: %.2f сек\n" +
-                            "  Многопоточно: %.2f сек\n" +
-                            "  Ускорение: %.2fx\n" +
-                            "  Эффективность: %.1f%%",
-                    singleThreadTimeMs / 1000.0,
-                    multiThreadTimeMs / 1000.0,
-                    speedup,
-                    efficiency
-            );
+            public String toString() {
+                return String.format(
+                        "Результаты сравнения:\n" +
+                                "  Однопоточно: %.2f сек\n" +
+                                "  Многопоточно: %.2f сек\n" +
+                                "  Ускорение: %.2fx\n" +
+                                "  Эффективность: %.1f%%",
+                        singleThreadTimeMs / 1000.0,
+                        multiThreadTimeMs / 1000.0,
+                        speedup,
+                        efficiency
+                );
+            }
         }
-    }
 }

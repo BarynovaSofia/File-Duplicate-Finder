@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HashCalculator {
+    private static final Logger logger = LoggerFactory.getLogger(HashCalculator.class);
 
     private static final String DEFAULT_ALGORITHM = "MD5";
     private static final int BUFFER_SIZE = 8192;
@@ -18,7 +21,6 @@ public class HashCalculator {
     }
 
     /**
-     * Создает калькулятор с указанным алгоритмом
      * @param algorithm алгоритм хеширования (MD5, SHA-1, SHA-256)
      */
     public HashCalculator(String algorithm) {
@@ -32,10 +34,9 @@ public class HashCalculator {
     }
 
     /**
-     * Вычисляет хеш файла
      * @param file файл для хеширования
      * @return хеш в виде hex-строки
-     * @throws IOException если ошибка чтения файла
+     * @throws IOException при ошибке чтения файла
      */
     public String calculateHash(File file) throws IOException {
         if (file == null) {
@@ -62,18 +63,17 @@ public class HashCalculator {
             }
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Алгоритм неожиданно стал недоступен: " + algorithm, e);
+            throw new RuntimeException("Алгоритм стал недоступен: " + algorithm, e);
         }
     }
 
     /**
-     * Вычисляет хеш файла по пути
      * @param filePath путь к файлу
      * @return хеш в виде hex-строки
      */
     public String calculateHash(String filePath) throws IOException {
         if (filePath == null || filePath.trim().isEmpty()) {
-            throw new IllegalArgumentException("Путь к файлу не может быть пустым");
+            throw new IllegalArgumentException("Путь к файлу не может быть пустым!!");
         }
 
         return calculateHash(new File(filePath));
@@ -142,37 +142,18 @@ public class HashCalculator {
         return algorithm;
     }
 
-    public static class FileHashInfo {
-        private final String filePath;
-        private final long fileSize;
-        private final String hash;
-        private final long processingTimeMs;
-        private final String algorithm;
-
-        public FileHashInfo(String filePath, long fileSize, String hash, long processingTimeMs, String algorithm) {
-            this.filePath = filePath;
-            this.fileSize = fileSize;
-            this.hash = hash;
-            this.processingTimeMs = processingTimeMs;
-            this.algorithm = algorithm;
-        }
-
-        public String getFilePath() { return filePath; }
-        public long getFileSize() { return fileSize; }
-        public String getHash() {return hash; }
-        public long getProcessingTimeMs() {return processingTimeMs; }
-        public String getAlgorithm() {return algorithm; }
-
+    public record FileHashInfo(String filePath, long fileSize, String hash,
+                               long processingTimeMs, String algorithm) {
         @Override
-        public String toString() {
-            return String.format("FileHashInfo{file='%s', size=%d bytes, hash='%s...', time=%dms, algo='%s'}",
-                    getFileName(), fileSize, hash.substring(0, Math.min(8, hash.length())),
-                    processingTimeMs, algorithm);
-        }
+            public String toString() {
+                return String.format("FileHashInfo{file='%s', size=%d bytes, hash='%s...', time=%dms, algo='%s'}",
+                        getFileName(), fileSize, hash.substring(0, Math.min(8, hash.length())),
+                        processingTimeMs, algorithm);
+            }
 
-        private String getFileName() {
-            int lastSeparator = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
-            return lastSeparator > 0 ? filePath.substring(lastSeparator + 1) : filePath;
+            private String getFileName() {
+                int lastSeparator = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+                return lastSeparator > 0 ? filePath.substring(lastSeparator + 1) : filePath;
+            }
         }
-    }
 }
